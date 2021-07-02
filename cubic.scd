@@ -8,12 +8,14 @@ s.options.memSize = 65536;
 s.options.memSize
 s.options.numInputBusChannels=0;
 s.record(numChannels:2) ;
+
+(
+
+s.options.numOutputBusChannels=12;
+s.waitForBoot;
 MIDIClient.init;
 MIDIIn.connectAll;
 ~notes0=Array.newClear(128);
-(
-s.options.numOutputBusChannels=12;
-s.waitForBoot;
 s.options.memSize = 65536;
 (
 (MIDIdef.noteOn(\noteOnTest, { arg vel,nn,chan,src; [nn,vel].postln;
@@ -26,24 +28,19 @@ MIDIdef.noteOff(\noteOffTest, { arg vel,nn;
 );
 
 ///////////////////////////////////////////////////////
-(~v=SynthDef(\solids,{
-	arg ton=220,a=1,gain=0.6,dur=1,filter=2,rq=1,monospat;
-	var x=0,y=1,freq, envelope,wave,partials=0,bend,bus=1,dur1=0.01, spat,scale=0;
-
-	bend=[-3,-6];
+(SynthDef(\solids,{
+	arg ton=220,a=1,dur=1,filter=1,rq=1,monospat;
+	var x=0,y=1,freq, envelope,wave,partials=0,bend,bus=1,dur1=0.01, spat,scale=0,octahedron;
+	bend=[-2,-4];
 	dur=MouseX.kr(0.1,10);
 	dur1=MouseY.kr(0.01,1);
-	 envelope=EnvGen.kr(Env.perc(dur1,dur,gain,bend),doneAction:2);
+	 envelope=EnvGen.kr(Env.perc(dur1,dur,1/6,bend),doneAction:2);
 	partials=0;
-	4.do{ scale=scale+1 ;spat=scale/(scale+a); 2.do{	x=x+1;      y= ((x+a)/x);      freq=(y*ton);
-		wave=SinOsc.ar(freq,mul:1/y);
+4.do{  scale=scale+1 ;spat=scale/(scale+a);	3.do{	x=x+1;      y= ((x+a)/x);      freq=(y*ton);
+		wave=BLowPass.ar(LFSaw.ar(freq,mul:1/y),ton*filter,rq)*envelope;
 		partials=(partials+wave)*envelope};
 	Out.ar(0,PanAz.ar(2,partials*envelope,LFSaw.ar(monospat/880+spat)))};
-Out.ar(0,PanAz.ar(6,BLowPass.ar(LFSaw.ar(ton),ton*filter,rq),LFSaw.ar(monospat/880+spat))*gain);
-
-	//stereo = PanAz.ar(2,Mix.new([InFeedback.ar(2),InFeedback.ar(3),InFeedback.ar(4),InFeedback.ar(5),InFeedback.ar(6),InFeedback.ar(7)]),MouseX.kr(-0.5,0.5))*gain;
-	//Out.ar(0,stereo);
-
+Out.ar(0,PanAz.ar(6,BLowPass.ar(LFSaw.ar(ton),ton*filter,rq)*envelope,LFSaw.ar(monospat/880+spat)));
 }).add;
 );
 )

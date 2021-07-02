@@ -8,26 +8,26 @@ s.options.memSize = 65536;
 s.options.memSize
 s.options.numInputBusChannels=0;
 s.record(numChannels:2) ;
+(
 MIDIClient.init;
 MIDIIn.connectAll;
-~notes0=Array.newClear(128);
-(
+~notes=Array.newClear(128);
 s.options.numOutputBusChannels=12;
 s.waitForBoot;
 s.options.memSize = 65536;
 (
 (MIDIdef.noteOn(\noteOnTest, { arg vel,nn,chan,src; [nn,vel].postln;
-	~notes0[nn] = Synth.new(\solids,[\ton, nn.midicps,\monospat, nn.midicps]);
+	~notes[nn] = Synth.new(\solids,[\ton, nn.midicps,\monospat, nn.midicps]);
 }));
 (
 MIDIdef.noteOff(\noteOffTest, { arg vel,nn;
-	~notes0[nn] = nil;
+	~notes[nn] = nil;
 }));
 );
 
 ///////////////////////////////////////////////////////
 (~v=SynthDef(\solids,{
-	arg ton=220,a=1,gain=0.6,dur=1,filter=2,rq=1,monospat;
+	arg ton=220,a=1,gain=0.1,dur=1,filter=2,rq=1,monospat;
 	var x=0,y=1,freq, envelope,wave,partials=0,bend,bus=1,dur1=0.01, spat,scale=0;
 
 	bend=[-3,-6];
