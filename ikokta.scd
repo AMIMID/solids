@@ -34,15 +34,15 @@ MIDIdef.noteOff(\noteOffTest, { arg vel,nn;
 
 ///////////////////////////////////////////////////////
 (SynthDef(\solids0,{
-	arg ton=220,a=2,dur=1,filter=3,rq=1,monospat,sweep=40;
+	arg ton=220,a=2,dur=1,filter=3,rq=1,monospat,sweep=60;
 	var x=0,y=1,freq, envelope,wave,partials=0,bend,bus=1,dur1=0.01, spat,scale=0,octahedron,phase=pi;
 	bend=[1,-5];
 	dur=MouseX.kr(0.05,5);
 	dur1=MouseY.kr(0.01,1);
-	 envelope=EnvGen.kr(Env.perc(dur1,dur,1/3,bend),doneAction:2);
+	 envelope=EnvGen.kr(Env.perc(dur1,dur,1/4,bend),doneAction:2);
 	partials=0;
 	ton=ton+1;
-5.do{  scale=scale+1 ;spat=scale/(scale+a);3.do{	x=x+1;      y= ((x+a)/x);      freq=(y*ton); phase=phase=0.5;
+4.do{  scale=scale+1 ;spat=scale/(scale+a);2.do{	x=x+1;      y= ((x+a)/x);      freq=(y*ton); phase=phase=0.5;
 		wave=BLowPass.ar(LFSaw.ar(freq,mul:1/y,iphase:phase),ton*filter,rq)*envelope;
 		partials=(partials+wave)*envelope};
 		Out.ar(8,PanAz.ar(2,partials*envelope,LFSaw.ar((1/(monospat/sweep)*spat))))};
@@ -51,12 +51,12 @@ MIDIdef.noteOff(\noteOffTest, { arg vel,nn;
 }).add;
 );
 (SynthDef(\solids1,{
-	arg ton=220,a=3,dur=1,filter=2,rq=1,monospat,sweep=20;
+	arg ton=220,a=3,dur=1,filter=2,rq=1,monospat,sweep=50;
 	var x=0,y=1,freq, envelope,wave,partials=0,bend,bus=1,dur1=0.01, spat,scale=0,octahedron,phase=pi;
 	bend=[1,-5];
 	dur=MouseX.kr(0.05,5);
 	dur1=MouseY.kr(0.01,1);
-	 envelope=EnvGen.kr(Env.perc(dur1,dur,1/3,bend),doneAction:2);
+	 envelope=EnvGen.kr(Env.perc(dur1,dur,1/5,bend),doneAction:2);
 	partials=0;
 5.do{  scale=scale+1 ;spat=scale/(scale+a);	3.do{	x=x+1;      y= ((x+a)/x);      freq=(y*ton); phase=phase=0.5;
 		wave=BLowPass.ar(LFSaw.ar(freq,mul:1/y,iphase:phase),ton*filter,rq)*envelope;
@@ -68,22 +68,4 @@ MIDIdef.noteOff(\noteOffTest, { arg vel,nn;
 )
 
 //////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////
-
-(
-Tdef(\1,
-      {
-
-				 1.do({(f= Pdef(\pat1, Pbind(\instrument, \solids,
-	\dur,1,
-           \ton, 440,
-			\a,Prand([1,2,3,4],inf);
-)).play(quant:1));
-
-			(1).yield});
-			})
-);
-//Tdef(\1).play;
-)
-
-/////////////////////////////
+/
