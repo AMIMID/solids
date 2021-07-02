@@ -16,34 +16,74 @@ s.waitForBoot;
 MIDIClient.init;
 MIDIIn.connectAll;
 ~notes0=Array.newClear(128);
-s.options.memSize = 65536;
+~notes1=Array.newClear(128);
+~notes2=Array.newClear(128);
+s.options.memSize = 32768;
+(
 (
 (MIDIdef.noteOn(\noteOnTest, { arg vel,nn,chan,src; [nn,vel].postln;
-	~notes0[nn] = Synth.new(\solids,[\ton, nn.midicps,\monospat, nn.midicps]);
+	~notes0[nn] = Synth.new(\solids0,[\ton, nn.midicps,\monospat, nn.midicps]);
+	~notes1[nn] = Synth.new(\solids1,[\ton, nn.midicps,\monospat, nn.midicps]);
+	~notes2[nn] = Synth.new(\solids2,[\ton, nn.midicps,\monospat, nn.midicps]);
 }));
 (
 MIDIdef.noteOff(\noteOffTest, { arg vel,nn;
 	~notes0[nn] = nil;
+	~notes1[nn] = nil;
+	~notes2[nn] = nil;
 }));
 );
 
 ///////////////////////////////////////////////////////
-(SynthDef(\solids,{
-	arg ton=220,a=1,dur=1,filter=1,rq=1,monospat;
-	var x=0,y=1,freq, envelope,wave,partials=0,bend,bus=1,dur1=0.01, spat,scale=0,octahedron;
-	bend=[-2,-4];
-	dur=MouseX.kr(0.1,10);
-	dur1=MouseY.kr(0.01,1);
-	 envelope=EnvGen.kr(Env.perc(dur1,dur,1/6,bend),doneAction:2);
+(SynthDef(\solids0,{
+	arg ton=220,a=2,dur=1,filter=3,rq=1,monospat;
+	var x=0,y=1,freq, envelope,wave,partials=0,bend,bus=1,dur1=0.01, spat,scale=0,octahedron,phase=pi;
+	bend=[-1,-6];
+	dur=MouseX.kr(0.12,12);
+	dur1=MouseY.kr(0.02,2);
+	 envelope=EnvGen.kr(Env.perc(dur1,dur,1/4,bend),doneAction:2);
 	partials=0;
-4.do{  scale=scale+1 ;spat=scale/(scale+a);	3.do{	x=x+1;      y= ((x+a)/x);      freq=(y*ton);
-		wave=BLowPass.ar(LFSaw.ar(freq,mul:1/y),ton*filter,rq)*envelope;
+4.do{  scale=scale+1 ;spat=scale/(scale+a);	4.do{	x=x+1;      y= ((x+a)/x);      freq=(y*ton); phase=phase=0.5;
+		wave=BLowPass.ar(LFSaw.ar(freq,mul:1/y,iphase:phase),ton*filter,rq)*envelope;
 		partials=(partials+wave)*envelope};
-	Out.ar(0,PanAz.ar(2,partials*envelope,LFSaw.ar(monospat/880+spat)))};
-Out.ar(0,PanAz.ar(6,BLowPass.ar(LFSaw.ar(ton),ton*filter,rq)*envelope,LFSaw.ar(monospat/880+spat)));
+	Out.ar(8,PanAz.ar(2,partials*envelope,LFSaw.ar(monospat/880+spat)))};
+Out.ar(0,PanAz.ar(8,BLowPass.ar(LFSaw.ar(ton),ton*filter,rq)*envelope,LFSaw.ar(monospat/880+spat)));
+	Out.ar(0,PanAz.ar(4,InFeedback.ar(8)*1/4,LFSaw.ar(monospat/880+spat))); Out.ar(4,PanAz.ar(4,InFeedback.ar(9)*1/4,LFSaw.ar(monospat/880+spat)));
 }).add;
 );
+(SynthDef(\solids1,{
+	arg ton=220,a=4,dur=1,filter=2,rq=1,monospat;
+	var x=0,y=1,freq, envelope,wave,partials=0,bend,bus=1,dur1=0.01, spat,scale=0,octahedron,phase=pi;
+	bend=[-1,-6];
+	dur=MouseX.kr(0.12,12);
+	dur1=MouseY.kr(0.02,2);
+	 envelope=EnvGen.kr(Env.perc(dur1,dur,1/4,bend),doneAction:2);
+	partials=0;
+4.do{  scale=scale+1 ;spat=scale/(scale+a);	4.do{	x=x+1;      y= ((x+a)/x);      freq=(y*ton); phase=phase=0.5;
+		wave=BLowPass.ar(LFSaw.ar(freq,mul:1/y,iphase:phase),ton*filter,rq)*envelope;
+		partials=(partials+wave)*envelope};
+	Out.ar(8,PanAz.ar(2,partials*envelope,LFSaw.ar(monospat/880+spat)))};
+Out.ar(0,PanAz.ar(8,BLowPass.ar(LFSaw.ar(ton),ton*filter,rq)*envelope,LFSaw.ar(monospat/880+spat)));
+	Out.ar(0,PanAz.ar(4,InFeedback.ar(8)*1/4,LFSaw.ar(monospat/880+spat))); Out.ar(4,PanAz.ar(4,InFeedback.ar(9)*1/4,LFSaw.ar(monospat/880+spat)));
+}).add);
+(SynthDef(\solids2,{
+	arg ton=220,a=8,dur=1,filter=1,rq=1,monospat;
+	var x=0,y=1,freq, envelope,wave,partials=0,bend,bus=1,dur1=0.01, spat,scale=0,octahedron,phase=pi;
+	bend=[-1,-6];
+	dur=MouseX.kr(0.12,12);
+	dur1=MouseY.kr(0.02,2);
+	 envelope=EnvGen.kr(Env.perc(dur1,dur,1/4,bend),doneAction:2);
+	partials=0;
+4.do{  scale=scale+1 ;spat=scale/(scale+a);	4.do{	x=x+1;      y= ((x+a)/x);      freq=(y*ton); phase=phase=0.5;
+		wave=BLowPass.ar(LFSaw.ar(freq,mul:1/y,iphase:phase),ton*filter,rq)*envelope;
+		partials=(partials+wave)*envelope};
+	Out.ar(8,PanAz.ar(2,partials*envelope,LFSaw.ar(monospat/880+spat)))};
+Out.ar(0,PanAz.ar(8,BLowPass.ar(LFSaw.ar(ton),ton*filter,rq)*envelope,LFSaw.ar(monospat/880+spat)));
+	Out.ar(0,PanAz.ar(4,InFeedback.ar(8)*1/4,LFSaw.ar(monospat/880+spat))); Out.ar(4,PanAz.ar(4,InFeedback.ar(9)*1/4,LFSaw.ar(monospat/880+spat)));
+}).add;
 )
+)
+
 //////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////
 
