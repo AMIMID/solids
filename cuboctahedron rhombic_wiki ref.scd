@@ -19,11 +19,10 @@ s.record(numChannels:2) ;
 	elevation_1=1,elevation_2=1,elevation_3=1,elevation_4=1,elevation_5=1,elevation_6=1,elevation_7=1,elevation_8=1,elevation_9=1,elevation_10=1,elevation_11=1,elevation_12=1,elevation_13=1,elevation_14=1,elevation_15=1,elevation_16=1,elevation_17=1,elevation_18=1,elevation_19=1,elevation_20=1,elevation_21=1,elevation_22=1,elevation_23=1,elevation_24=1,
 	envelope1,envelope2;
 		bend=[2,-3];
-	dur=MouseX.kr(0.5,5);
+	dur=MouseX.kr(1,18);
 	dur1=MouseY.kr(0.01,6);
 
-	 envelope1=EnvGen.kr(Env.perc(dur1,dur,1/2,bend),doneAction:2);
-	 envelope=EnvGen.kr(Env.perc(dur1,dur,1/1,bend),doneAction:2);
+	 envelope1=EnvGen.kr(Env.perc(dur1,dur,1/1,bend),doneAction:2);
 	partials=0;
 	ton=ton+1;
 6.do{  scale=scale+1 ;spat=scale/(scale+a); vectorbus=vectorbus+4;
@@ -61,9 +60,9 @@ s.record(numChannels:2) ;
 
 
 ((f= Pdef(\pat1, Pbind(\instrument, \solids,
-	\dur,Prand([1/2,1/4,1/8],inf),
+	\dur,1
            \ton, 220,
-			\a,Pseq([2,5,3,4,5,3,4,5,6,8,6,7,5,6,4],inf),
+	\a,Prand([1,12,2,3,4,5,6,7,8,9,10,11],inf),
 			\elevation_1,Pexprand(1/24,1,inf),
 			\elevation_2,Pexprand(1/24,1,inf),
 			\elevation_3,Pexprand(1/24,1,inf),

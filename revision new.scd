@@ -22,14 +22,14 @@ s.record(numChannels:2) ;
         	x4=0,y4=0,freq4,envelope4,p4,sided,side4,
 	          x5=0,y5=1,freq5, envelope5,p5,sidef,side5,
 	           x6=0,y6=0,freq6,envelope6,p6,sideg,side6,
-	         dur,bend=[1,-1];
+	         dur,bend=[5,-3];
 
-	sidea=Out.ar(2,SinOsc.ar(ton+offset1));
-	sideb=Out.ar(3,SinOsc.ar(ton+offset2));
-	sidec=Out.ar(4,SinOsc.ar(ton+offset3));
-	sided=Out.ar(5,SinOsc.ar(ton+offset4));
-	sidef=Out.ar(6,SinOsc.ar(ton+offset5));
-	sideg=Out.ar(7,SinOsc.ar(ton+offset6));
+	sidea=0;//Out.ar(2,LFTri.ar(ton+offset1));
+	sideb=0;//Out.ar(3,LFTri.ar(ton+offset2));
+	sidec=0;//Out.ar(4,LFTri.ar(ton+offset3));
+	sided=0;//Out.ar(5,LFTri.ar(ton+offset4));
+	sidef=0;//Out.ar(6,LFTri.ar(ton+offset5));
+	sideg=0;//Out.ar(7,LFTri.ar(ton+offset6));
 	dur=1;
 	 envelope=EnvGen.kr(Env.perc(dur,dur,gain,bend),doneAction:2);
 	 envelope2=EnvGen.kr(Env.perc(dur,dur,gain,bend),doneAction:2);
@@ -37,29 +37,29 @@ s.record(numChannels:2) ;
 	 envelope4=EnvGen.kr(Env.perc(dur,dur,gain,bend),doneAction:2);
 	 envelope5=EnvGen.kr(Env.perc(dur,dur,gain,bend),doneAction:2);
 	 envelope6=EnvGen.kr(Env.perc(dur,dur,gain,bend),doneAction:2);
-	3.do{
+	    4.do{
 		x=x+1;      y= ((x+a)/x);      freq=(y*ton);
-		side1=LFTri.ar(freq,mul:1/y,iphase:0pi);
+		side1=SinOsc.ar(freq,mul:1/y,iphase:0pi);
 		sidea=(sidea+side1); p1=sidea*envelope};
-	3.do{
+	    4.do{
 		x2=x2+1;      y2= ((x2+a)/x2);      freq2=(y2*ton);
-		side2=LFTri.ar(freq2,mul:1/y2,iphase:pi/2);
+		side2=SinOsc.ar(freq2,mul:1/y2,iphase:pi/2);
 		sideb=(sideb+side2); p2=sideb*envelope2};
-		3.do{
+		4.do{
 		x3=x3+1;      y3= ((x3+a)/x3);      freq3=(y3*ton);
-		side3=LFTri.ar(freq3,mul:1/y3,iphase:pi);
+		side3=SinOsc.ar(freq3,mul:1/y3,iphase:pi);
 		sidec=(sidec+side3); p3=sidec*envelope3};
-		3.do{
+		4.do{
 		x4=x4+1;      y4= ((x4+a)/x4);      freq4=(y4*ton);
-	side4=LFTri.ar(freq4,mul:1/y4,iphase:(3pi)/2);
+  	   side4=SinOsc.ar(freq4,mul:1/y4,iphase:(3pi)/2);
 		sided=(sided+side4); p4=sided*envelope4};
-	3.do{
+	    4.do{
 		x5=x5+1;      y5= ((x5+a)/x5);      freq5=(y5*ton);
-		side5=LFTri.ar(freq5,mul:1/y5,iphase:pi);
+		side5=SinOsc.ar(freq5,mul:1/y5,iphase:pi);
 		sidef=(sidef+side5); p5=sidef*envelope5};
-		3.do{
+		4.do{
 		x6=x6+1;      y6= ((x6+a)/x6);      freq6=(y6*ton);
-	side6=LFTri.ar(freq6,mul:1/y6,iphase:(3pi)/2);
+	side6=SinOsc.ar(freq6,mul:1/y6,iphase:(3pi)/2);
 		sideg=(sideg+side6); p6=sideg*envelope6};
 Out.ar(2,p1);
 Out.ar(3,p2);
@@ -78,7 +78,7 @@ Tdef(\1,
       {
 
 				 1.do({(f= Pdef(\pat1, Pbind(\instrument, \solids,
-	\dur,Prand([1],inf),
+	\dur,Pexprand(0.1,1,inf),
            \ton, Pexprand(110,880,inf),
 			\a,Prand([2,3,5],inf);
 )).play(quant:1));

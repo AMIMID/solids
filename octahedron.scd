@@ -43,12 +43,6 @@ wave=BLowPass.ar(SinOsc.ar(freq,mul:1/y),ton*filter,rq)*envelope1;
 	partials=(partials+wave)*envelope1};
 	Out.ar(vectorbus,PanAz.ar(2,partials*envelope1,LFSaw.ar(sweep*spat)))};
 
-3.do{  scale1=scale1+1; spat1=scale1/(scale1+a1); vectorbus1=vectorbus1+2;
-		2.do{	x1=x1+1;      y1= ((x1+a1)/x1);      freq1=(y1*ton1);
-wave1=BLowPass.ar(SinOsc.ar(freq1,mul:1/y1),ton*filter,rq)*envelope1;
-	partials1=(partials1+wave1)*envelope1};
-	Out.ar(vectorbus1,PanAz.ar(2,partials1*envelope1,LFSaw.ar(sweep1*spat1)))};
-
 	Out.ar(0,InFeedback.ar(6)*elevation_1*envelope);
 	Out.ar(1,InFeedback.ar(7)*elevation_2*envelope);
 	Out.ar(2,InFeedback.ar(8)*elevation_3*envelope);
